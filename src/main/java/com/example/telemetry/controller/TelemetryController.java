@@ -23,7 +23,7 @@ public class TelemetryController {
         return service.getAllTelemetry();
     }
 
-    @GetMapping
+    @GetMapping("/filter")
     public List<TelemetryData> getTelemetryFilter(
             @RequestParam(required = false) Double minTemp,
             @RequestParam(required = false) Double maxTemp,
