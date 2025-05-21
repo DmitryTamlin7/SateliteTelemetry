@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Telemetry Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Telemetry Data</h1>
+
+<table border="1" id="telemetry-table">
+    <thead>
+    <tr>
+        <th>Время</th>
+        <th>Температура (°C)</th>
+        <th>Уровень батареи (%)</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<h2>График температуры</h2>
+<canvas id="temperatureChart" width="600" height="300"></canvas>
+
+<script>
+    async function fetchTelemetry() {
+        try {
+            const response = await fetch('/telemetry');
+            const data = await response.json();
+
+            const tbody = document.querySelector('#telemetry-table tbody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const date = new Date(item.timestamp);
+                const formattedDate = date.toLocaleString();
+                const tempFormatted = item.temperature.toFixed(2);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${formattedDate}</td>
+                    <td>${tempFormatted}</td>
+                    <td>${item.batteryLevel}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const labels = data.map(item => {
+                const date = new Date(item.timestamp);
+                return date.toLocaleTimeString();
+            });
+            const temps = data.map(item => item.temperature.toFixed(2));
+
+            if (window.temperatureChart) {
+                window.temperatureChart.destroy();
+            }
+
+            const ctx = document.getElementById('temperatureChart').getContext('2d');
+            window.temperatureChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Температура (°C)',
+                        data: temps,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Время'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Температура (°C)'
+                            },
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        } catch (e) {
+            console.error('Ошибка загрузки данных:', e);
+        }
+    }
+
+    fetchTelemetry();
+    setInterval(fetchTelemetry, 10000);
+</script>
+</body>
+</html>

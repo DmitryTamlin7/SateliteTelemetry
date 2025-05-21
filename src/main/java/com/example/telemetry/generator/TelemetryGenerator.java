@@ -14,7 +14,7 @@ public class TelemetryGenerator {
         this.telemetryService = telemetryService;
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 10000)
     public void generateAndSaveTelemetry() {
         double temp = 15 + Math.random() * 20;
         int battery = (int) (50 + Math.random() * 50);
