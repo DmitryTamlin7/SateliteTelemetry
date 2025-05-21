@@ -6,28 +6,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class TelemetryService {
 
     private static final String TOPIC = "Telemetry_topic";
-    public List<TelemetryData> getAllTelemetry;
 
     @Autowired
     private TelemetryDataRepository repository;
 
     @Autowired
-    private  KafkaTemplate<String,String> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
-    public  TelemetryData saveTelemetry(TelemetryData data){
+    public TelemetryData saveTelemetry(TelemetryData data) {
+        data.setTimestamp(LocalDateTime.now());
+
         TelemetryData saved = repository.save(data);
 
-        //KAFKA
         String message = String.format(
-                "{\"temperature\":%.2f,\"batteryLevel\":%d}",
+                "{\"temperature\":%.2f,\"batteryLevel\":%d,\"timestamp\":\"%s\"}",
                 data.getTemperature(),
-                data.getBatteryLevel()
+                data.getBatteryLevel(),
+                data.getTimestamp().toString()
         );
         kafkaTemplate.send(TOPIC, message);
 

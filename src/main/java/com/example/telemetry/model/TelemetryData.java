@@ -1,7 +1,6 @@
 package com.example.telemetry.model;
 
-
-import net.bytebuddy.asm.Advice;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class TelemetryData {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -18,7 +18,25 @@ public class TelemetryData {
     private double temperature;
     private int batteryLevel;
 
+    // Исправлено имя поля и формат ISO с T для корректного парсинга на фронте
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime timestamp;
+
     public TelemetryData() {}
+
+    public TelemetryData(double temperature, int batteryLevel, LocalDateTime timestamp) {
+        this.temperature = temperature;
+        this.batteryLevel = batteryLevel;
+        this.timestamp = timestamp;
+    }
+
+    public TelemetryData(double temperature, int batteryLevel){
+        this.temperature = temperature;
+        this.batteryLevel = batteryLevel;
+    }
+
+
+    // Геттеры и сеттеры
 
     public long getId() {
         return id;
@@ -44,18 +62,11 @@ public class TelemetryData {
         this.batteryLevel = batteryLevel;
     }
 
-    public TelemetryData(double temperature, int batteryLevel) {
-        this.temperature = temperature;
-        this.batteryLevel = batteryLevel;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    private LocalDateTime  timetamp = LocalDateTime.now();
-
-    public LocalDateTime getTimetamp() {
-        return timetamp;
-    }
-
-    public void setTimetamp(LocalDateTime timetamp) {
-        this.timetamp = timetamp;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }
