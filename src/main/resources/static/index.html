@@ -36,16 +36,6 @@
     <button onclick="clearFilter()">Очистить</button>
 </div>
 
-<table id="telemetry-table">
-    <thead>
-    <tr>
-        <th>Время</th>
-        <th>Температура (°C)</th>
-        <th>Уровень батареи (%)</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
 
 <h2>График температуры</h2>
 <canvas id="temperatureChart" width="800" height="300"></canvas>
@@ -174,6 +164,18 @@
     fetchTelemetry();
 
 </script>
+
+<table id="telemetry-table">
+    <thead>
+    <tr>
+        <th>Время</th>
+        <th>Температура (°C)</th>
+        <th>Уровень батареи (%)</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
 
 </body>
 </html>
