@@ -3,6 +3,10 @@
 📡 **A web-based system for monitoring satellite telemetry data** in real-time with data filtering, visualization, and persistence.
 
 ---
+## 📸 Screenshots
+
+![Screenshot](photo/fullscreen.png)
+---
 
 ## 🧩 Stack Used
 
